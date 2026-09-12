@@ -1,0 +1,78 @@
+CREATE TABLE user (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            password_hash TEXT NOT NULL
+        , display_name TEXT DEFAULT 'User', profile_picture TEXT DEFAULT '', email TEXT DEFAULT 'user@vault.local', investor_password_hash TEXT, investor_access_enabled INTEGER DEFAULT 0, investor_password_plain TEXT, currency TEXT DEFAULT 'INR', setup_completed INTEGER DEFAULT 0)
+CREATE TABLE sqlite_sequence(name,seq)
+CREATE TABLE payouts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            date TEXT NOT NULL,
+            amount REAL NOT NULL,
+            note TEXT,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        , allocations TEXT)
+CREATE TABLE goals (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL UNIQUE,
+            target_amount REAL NOT NULL,
+            saved_amount REAL DEFAULT 0,
+            notes TEXT
+        , status TEXT DEFAULT 'Active', completed_at DATETIME, archived_at DATETIME, icon TEXT DEFAULT '🎯', weight INTEGER DEFAULT 0)
+CREATE TABLE funds (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL UNIQUE,
+            balance REAL DEFAULT 0
+        )
+CREATE TABLE priority_tasks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            description TEXT,
+            status TEXT DEFAULT 'Pending'
+        )
+CREATE TABLE subtasks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            task_id INTEGER,
+            title TEXT NOT NULL,
+            status TEXT DEFAULT 'Pending',
+            FOREIGN KEY (task_id) REFERENCES priority_tasks(id)
+        )
+CREATE TABLE transactions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            date DATETIME DEFAULT CURRENT_TIMESTAMP,
+            action TEXT NOT NULL,
+            amount REAL,
+            details TEXT
+        )
+CREATE TABLE direct_contributions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            date TEXT NOT NULL,
+            amount REAL NOT NULL,
+            note TEXT,
+            allocation_type TEXT,
+            allocations TEXT,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+CREATE TABLE expenses (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    date TEXT NOT NULL,
+    amount REAL NOT NULL,
+    category TEXT NOT NULL,
+    description TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+)
+CREATE TABLE expense_transfers (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        date TEXT NOT NULL,
+        amount REAL NOT NULL,
+        destination_type TEXT NOT NULL,
+        destination_name TEXT NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+CREATE TABLE budget_funding (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    date TEXT NOT NULL,
+    type TEXT NOT NULL,
+    source_name TEXT NOT NULL,
+    amount REAL NOT NULL,
+    notes TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+)
